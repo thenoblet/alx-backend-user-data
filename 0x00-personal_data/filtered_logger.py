@@ -19,8 +19,10 @@ to ensure sensitive information is not logged.
 """
 
 import re
+import os
 import logging
 from typing import List
+from mysql.connector import connection, Error
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -74,3 +76,31 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def get_db():
+    """
+    Establishes a connection to a MySQL database using credentials from
+    environment variables.
+
+    The function attempts to connect to a MySQL database using the following
+    environment variables: 'PERSONAL_DATA_DB_USERNAME',
+    'PERSONAL_DATA_DB_PASSWORD', 'PERSONAL_DATA_DB_HOST', and
+    'PERSONAL_DATA_DB_NAME'. If any errors occur during the connection attempt,
+    an error message is logged.
+
+    Returns:
+        MySQLConnection: A MySQL database connection object if successful,
+        otherwise None.
+    """
+    try:
+        conn = connection.MySQLConnection(
+            user=os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root'),
+            password=os.environ.get('PERSONAL_DATA_DB_PASSWORD', ""),
+            host=os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost'),
+            database=os.environ.get('PERSONAL_DATA_DB_NAME'),
+        )
+        return conn
+    except Error as e:
+        logging.error(f"Error connecting to MySQL database {e}")
+        return None
