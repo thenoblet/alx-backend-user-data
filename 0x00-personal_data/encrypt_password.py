@@ -15,7 +15,7 @@ using bcrypt, and returns the hashed password.
 import bcrypt
 
 
-def hash_password(password):
+def hash_password(password: str) -> str:
     """
     Hashes a password using bcrypt.
 
