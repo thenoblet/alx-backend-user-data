@@ -104,3 +104,17 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         return conn
     except mysql.connector.Error as e:
         return None
+
+
+def main() -> None:
+    """Connect to the database and print all rows of the users table."""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    [print(row) for row in cursor.fetchall()]
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
