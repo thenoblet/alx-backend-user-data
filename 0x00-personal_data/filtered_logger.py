@@ -19,8 +19,27 @@ from typing import List
 def filter_datum(
     fields: List[str], redaction: str, message: str, separator: str
 ) -> str:
-    """ Redacts sensitive information from a message. """
-    return re.sub(
-        f'({"|".join(fields)})=[^{separator}]*',
-        f'\\1={redaction}', message
-    )
+    """
+    Redacts sensitive information from a message.
+    
+    This function searches for key-value pairs in the message where the
+    key matches one of the specified fields. It replaces the value
+    corresponding to these keys with the redaction string.
+    Args:
+        fields (List[str]): A list of fields (keys) whose values should
+        be redacted.
+        redaction (str): The string to replace sensitive data with.
+        message (str): The input string containing key-value pairs.
+        separator (str): The character that separates keys from their values.
+    Returns:
+        str: The redacted message with sensitive information replaced by
+        the redaction string.
+    Example:
+        >>> message = "name=John Doe;email=johndoe@example.com;password=12345"
+        >>> filter_datum(["email", "password"], "***", message, ";")
+        'name=John Doe;email=***;password=***'
+    """
+    for field in fields:
+        pattern = rf'{field}=([^{separator}]+)'
+        message = re.sub(pattern, f'{field}={redaction}', message)
+    return message
