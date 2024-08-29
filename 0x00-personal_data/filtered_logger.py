@@ -17,10 +17,7 @@ from typing import List
 
 
 def filter_datum(
-    fields: List[str],
-    redaction: str,
-    message: str,
-    separator: str
+    fields: List[str], redaction: str, message: str, separator: str
 ) -> str:
     """
     Redacts sensitive information from a message.
@@ -45,7 +42,7 @@ def filter_datum(
         >>> filter_datum(["email", "password"], "***", message, ";")
         'name=John Doe;email=***;password=***'
     """
-    for field in fields:
-        pattern = rf'{field}=([^{separator}]+)'
-        message = re.sub(pattern, f'{field}={redaction}', message)
-    return message
+    return re.sub(
+        f'({"|".join(fields)})=[^{separator}]*',
+        f'\\1={redaction}', message
+    )
