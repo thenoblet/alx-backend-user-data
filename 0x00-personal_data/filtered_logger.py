@@ -103,7 +103,7 @@ def get_db() -> Optional[MySQLConnection]:
         )
         return conn
     except Error as e:
-        logging.error(f"Error connecting to MySQL database {e}")
+        logging.error(f"Database connection failed - {e}")
         return None
 
 
