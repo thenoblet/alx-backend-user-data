@@ -103,5 +103,4 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         )
         return conn
     except mysql.connector.Error as e:
-        logging.error(f"Error connecting to MySQL database: {e}")
         return None
