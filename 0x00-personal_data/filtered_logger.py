@@ -21,7 +21,7 @@ to ensure sensitive information is not logged.
 import re
 import os
 import logging
-from typing import List, Optional
+from typing import List
 from mysql.connector import Error
 from mysql.connector.connection import MySQLConnection
 
@@ -79,7 +79,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> Optional[MySQLConnection]:
+def get_db() -> MySQLConnection:
     """
     Establishes a connection to a MySQL database using credentials from
     environment variables.
