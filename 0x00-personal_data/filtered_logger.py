@@ -22,7 +22,7 @@ import re
 import os
 import logging
 from typing import List
-from mysql.connector import Error
+import mysql.connector
 from mysql.connector.connection import MySQLConnection
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -95,13 +95,13 @@ def get_db() -> MySQLConnection:
         otherwise None.
     """
     try:
-        conn = MySQLConnection(
+        conn = mysql.connector.connect(
             user=os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root'),
             password=os.environ.get('PERSONAL_DATA_DB_PASSWORD', ""),
             host=os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost'),
             database=os.environ.get('PERSONAL_DATA_DB_NAME'),
         )
         return conn
-    except Error as e:
-        logging.error(f"Database connection failed - {e}")
+    except mysql.connector.Error as e:
+        logging.error(f"Error connecting to MySQL database: {e}")
         return None
