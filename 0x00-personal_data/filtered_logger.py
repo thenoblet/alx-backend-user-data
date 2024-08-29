@@ -105,31 +105,3 @@ def get_db() -> MySQLConnection:
     except Error as e:
         logging.error(f"Error connecting to MySQL database {e}")
         return None
-
-
-def main() -> None:
-    """
-    Main function to connect to the database, query the `users` table,
-    and print all rows.
-
-    This function performs the following steps:
-    1. Establishes a connection to the MySQL database using the
-       `get_db` function.
-    2. Creates a cursor object to interact with the database.
-    3. Executes a SQL query to retrieve all rows from the `users` table.
-    4. Fetches and prints all rows from the query result.
-    5. Closes the cursor and the database connection.
-
-    Returns:
-        None
-    """
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM users")
-    [print(row) for row in cursor.fetchall()]
-    cursor.close()
-    db.close()
-
-
-if __name__ == "__main__":
-    main()
