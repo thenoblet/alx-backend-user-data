@@ -6,7 +6,7 @@ from os import getenv
 from typing import Optional
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
-from flask_cors import (CORS, cross_origin)
+from flask_cors import CORS
 import os
 
 
@@ -16,7 +16,10 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 
 auth_type = getenv("AUTH_TYPE")
-if auth_type:
+if auth_type == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
+elif auth_type == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
 
@@ -66,7 +69,7 @@ def before_request_fun() -> Optional[str]:
         return
 
     if not auth.authorization_header(request):
-        abort(404)
+        abort(401)
 
     if not auth.current_user(request):
         abort(403)
@@ -75,4 +78,4 @@ def before_request_fun() -> Optional[str]:
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)
