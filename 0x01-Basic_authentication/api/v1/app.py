@@ -41,6 +41,17 @@ def forbidden(error) -> str:
 
 @app.before_request
 def before_request_fun():
+    """
+    Executes before each request.
+
+    Checks if the request path requires authentication and performs
+    the following checks:
+    - If the path is not excluded, ensure the request has an
+      authorization header.
+    - Validate the current user based on the authorization header.
+
+    If any checks fail, the request is aborted with an appropriate status code.
+    """
     if not auth:
         return
 
@@ -63,4 +74,4 @@ def before_request_fun():
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port, debug=True)
+    app.run(host=host, port=port)
