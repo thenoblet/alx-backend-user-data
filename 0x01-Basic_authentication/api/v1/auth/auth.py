@@ -5,7 +5,7 @@ API Authentication Module
 This module provides the `Auth` class for managing API authentication.
 """
 
-from typing import List, TypeVar
+from typing import List, TypeVar, Union
 from flask import request
 
 
@@ -31,11 +31,14 @@ class Auth():
 
         return True
 
-    def authorization_header(self, request=None) -> str:
+    def authorization_header(self, request=None) -> Union[str, None]:
         """
         Gets the value of the Authorization header from the request.
         """
-        return None
+        if not request:
+            return None
+
+        return request.headers.get('Authorization')
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
