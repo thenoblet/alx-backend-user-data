@@ -18,7 +18,18 @@ class Auth():
         """
         Determines if the given path requires authentication.
         """
-        return False
+        if not path or not excluded_paths:
+            return True
+
+        slashed_path = self._normalise(path)
+
+        for excluded_path in excluded_paths:
+            excluded_path = self._normalise(excluded_path)
+
+            if excluded_path == slashed_path:
+                return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """
@@ -31,3 +42,16 @@ class Auth():
         Gets the current user based on the request.
         """
         return None
+
+    @staticmethod
+    def _normalise(path: str) -> str:
+        """
+        Normalizes a path by ensuring it ends with a trailing slash.
+
+        Args:
+                path (str): The path to normalize.
+
+        Returns:
+                str: The normalized path ending with a trailing slash.
+        """
+        return path if path.endswith("/") else path + "/"
