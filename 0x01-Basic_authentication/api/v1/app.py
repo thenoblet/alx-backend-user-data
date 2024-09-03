@@ -3,6 +3,7 @@
 Route module for the API
 """
 from os import getenv
+from typing import Optional
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
@@ -40,7 +41,7 @@ def forbidden(error) -> str:
 
 
 @app.before_request
-def before_request_fun():
+def before_request_fun() -> Optional[str]:
     """
     Executes before each request.
 
