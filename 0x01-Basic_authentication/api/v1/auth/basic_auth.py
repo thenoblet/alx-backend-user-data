@@ -98,3 +98,30 @@ class BasicAuth(Auth):
             return db_user[0]
 
         return None
+
+    def current_user(self, request=None) -> User:
+        """Return the current authenticated user."""
+        auth_header = self.authorization_header(request)
+        if not auth_header:
+            return None
+
+        base64_auth_header = self.extract_base64_authorization_header(
+            auth_header
+        )
+        if not base64_auth_header:
+            return None
+
+        decoded_base64_auth_header = self.decode_base64_authorization_header(
+            base64_auth_header
+        )
+        if not decoded_base64_auth_header:
+            return None
+
+        user_credentials = self.extract_user_credentials(
+            decoded_base64_auth_header
+        )
+        if not user_credentials:
+            return None
+
+        user_email, user_pwd = user_credentials
+        return self.user_object_from_credentials(user_email, user_pwd)
