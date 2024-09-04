@@ -49,12 +49,17 @@ class Auth():
     @staticmethod
     def _normalise(path: str) -> str:
         """
-        Normalizes a path by ensuring it ends with a trailing slash.
+        Normalizes a path by ensuring it ends with a trailing slash,
+        except when the path ends with a wildcard.
 
         Args:
                 path (str): The path to normalize.
 
         Returns:
-                str: The normalized path ending with a trailing slash.
+            str: The normalized path ending with a trailing slash,
+                 except if it ends with a wildcard.
         """
+        if path.endswith("*"):
+            return path
+
         return path if path.endswith("/") else path + "/"
