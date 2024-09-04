@@ -21,12 +21,15 @@ class Auth():
         if not path or not excluded_paths:
             return True
 
-        slashed_path = self._normalise(path)
+        normalised_path = self._normalise(path)
 
         for excluded_path in excluded_paths:
-            excluded_path = self._normalise(excluded_path)
+            normalised_excluded = self._normalise(excluded_path)
 
-            if excluded_path == slashed_path:
+            if normalised_excluded.endswith('*'):
+                if normalised_path.startswith(normalised_excluded[:-1]):
+                    return False
+            elif normalised_excluded == normalised_path:
                 return False
 
         return True
