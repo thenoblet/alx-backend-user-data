@@ -5,10 +5,14 @@ Basic Authentication Module
 This module provides the `BasicAuth` class, which is a subclass of the `Auth`
 class.
 """
-from api.v1.auth.auth import Auth
-from typing import Tuple, Union
+from typing import Tuple, Union, TypeVar
 import base64
 import binascii
+
+from api.v1.auth.auth import Auth
+from models.user import User as DBUser
+
+User = TypeVar("User")
 
 
 class BasicAuth(Auth):
@@ -74,3 +78,23 @@ class BasicAuth(Auth):
 
         username, password = user_credentials
         return username, password
+
+    def user_object_from_credentials(
+        self, user_email: str, user_pwd: str
+    ) -> Union[User, None]:
+        """Return the User instance based on email and password."""
+        if not user_email or not isinstance(user_email, str):
+            return None
+
+        if not user_pwd or not isinstance(user_pwd, str):
+            return None
+
+        try:
+            db_user = DBUser.search({"email": user_email})
+        except KeyError:
+            return None
+
+        if db_user and db_user[0].is_valid_password(user_pwd):
+            return db_user[0]
+
+        return None
