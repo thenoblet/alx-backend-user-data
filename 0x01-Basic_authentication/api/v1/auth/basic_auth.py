@@ -6,7 +6,7 @@ This module provides the `BasicAuth` class, which is a subclass of the `Auth`
 class.
 """
 from api.v1.auth.auth import Auth
-from typing import Tuple
+from typing import Tuple, Union
 import base64
 import binascii
 
@@ -56,7 +56,7 @@ class BasicAuth(Auth):
 
     def extract_user_credentials(
         self, decoded_base64_authorization_header: str
-    ) -> Tuple[str, str]:
+    ) -> Union[Tuple[None, None], Tuple[str, str]]:
         """
         Extracts the username and password from the decoded Base64 string.
         """
@@ -65,7 +65,7 @@ class BasicAuth(Auth):
         ):
             return None, None
 
-        if (delimiter := ":") not in decoded_base64_authorization_header:
+        if ":" not in decoded_base64_authorization_header:
             return None, None
 
         user_credentials = decoded_base64_authorization_header.split(":", 1)
