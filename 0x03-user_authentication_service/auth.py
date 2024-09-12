@@ -75,7 +75,6 @@ class Auth:
             hashed_password=db_user.hashed_password.encode(),
         )
 
-    @staticmethod
     def _generate_uuid() -> str:
         """Generate UUIDs."""
         return str(uuid.uuid4())
